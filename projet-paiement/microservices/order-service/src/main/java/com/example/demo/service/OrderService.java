@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.OrderRequest;
 import com.example.demo.dto.OrderResponse;
+import com.example.demo.dto.event.OrderCreatedEvent;
 import com.example.demo.model.Order;
 import com.example.demo.repository.OrderRepository;
 import org.slf4j.Logger;
@@ -19,11 +20,11 @@ public class OrderService {
     private static final String ORDER_TOPIC = "order-created";
 
     private final OrderRepository orderRepository;
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
 
     public OrderService(
         OrderRepository orderRepository,
-        KafkaTemplate<String, String> kafkaTemplate
+        KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate
     ) {
         this.orderRepository = orderRepository;
         this.kafkaTemplate = kafkaTemplate;
@@ -44,16 +45,20 @@ public class OrderService {
             savedOrder.getId()
         );
 
-        String message =
-            "Order created: " +
-            savedOrder.getId() +
-            " by User: " +
-            savedOrder.getUserId();
-        kafkaTemplate.send(ORDER_TOPIC, message);
+        OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent(
+            savedOrder.getId(),
+            savedOrder.getUserId(),
+            savedOrder.getProductDescription(),
+            savedOrder.getQuantity(),
+            savedOrder.getTotalPrice(),
+            savedOrder.getOrderDate()
+        );
+
+        kafkaTemplate.send(ORDER_TOPIC, orderCreatedEvent);
         log.info(
-            "Published message to Kafka topic '{}': {}",
+            "Published OrderCreatedEvent to Kafka topic '{}': {}",
             ORDER_TOPIC,
-            message
+            orderCreatedEvent.toString() 
         );
 
         return OrderResponse.fromEntity(savedOrder);
