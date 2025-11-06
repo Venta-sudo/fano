@@ -187,3 +187,5 @@ Cette requête va démarrer tout le flux asynchrone.
 Pour arrêter tous les conteneurs, assurez-vous d'être dans le répertoire racine du projet et exécutez :
 ```sh
 docker-compose down
+
+.
