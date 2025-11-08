@@ -301,7 +301,144 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 
 > **Important :** C'est pourquoi vous devez faire `mvnw clean package` avant de lancer `docker-compose up --build`. Sinon, les fichiers JAR n'existeront pas.
 
-## 11. Troubleshooting
+## 11. Installation de Maven sur Windows
+
+> ℹ️ **Si vous êtes sur Windows et Maven n'est pas installé**
+
+### Option 1 : Installation manuelle
+
+1. **Téléchargez Maven** depuis [maven.apache.org](https://maven.apache.org/download.cgi)
+   - Prenez la version "Binary zip archive" (ex: `apache-maven-3.9.5-bin.zip`)
+
+2. **Extrayez le fichier** dans un dossier, par exemple : `C:\Program Files\apache-maven-3.9.5\`
+
+3. **Ajoutez Maven aux variables d'environnement Windows :**
+   - Ouvrez : **Panneau de configuration → Système → Paramètres avancés → Variables d'environnement**
+   - Cliquez sur **Nouvelle** (sous "Variables utilisateur")
+   - **Nom :** `MAVEN_HOME`
+   - **Valeur :** `C:\Program Files\apache-maven-3.9.5` (ajustez selon votre chemin)
+   - Cliquez **OK**
+
+4. **Ajoutez Maven au PATH :**
+   - Dans les variables d'environnement, sélectionnez **Path** (sous "Variables système")
+   - Cliquez **Modifier**
+   - Cliquez **Nouveau** et ajoutez : `%MAVEN_HOME%\bin`
+   - Cliquez **OK** x2
+
+5. **Vérifiez l'installation :** Ouvrez un terminal (CMD ou PowerShell) et tapez :
+   ```cmd
+   mvn --version
+   ```
+   Vous devriez voir la version de Maven.
+
+### Option 2 : Installation avec Chocolatey (plus rapide)
+
+Si vous avez [Chocolatey](https://chocolatey.org/install) installé :
+
+```powershell
+choco install maven
+```
+
+Puis vérifiez :
+```cmd
+mvn --version
+```
+
+---
+
+## 12. Générer du trafic sur Windows (alternative au script Bash)
+
+> ℹ️ **Windows n'a pas de Bash, voici les alternatives**
+
+### Option 1 : Script PowerShell (recommandé pour Windows)
+
+Créez un fichier `load-test.ps1` à la racine du projet :
+
+```powershell
+$url = "http://localhost/api/orders"
+$headers = @{"Content-Type" = "application/json"}
+
+while ($true) {
+    $body = @{
+        userId = 1
+        productDescription = "Test"
+        quantity = 5
+        totalPrice = 100.00
+    } | ConvertTo-Json
+
+    try {
+        Invoke-WebRequest -Uri $url -Method POST -Headers $headers -Body $body -ErrorAction SilentlyContinue | Out-Null
+    } catch {
+        # Ignore les erreurs
+    }
+
+    Start-Sleep -Milliseconds 500
+}
+```
+
+Puis, ouvrez **PowerShell** en tant qu'administrateur et exécutez :
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+cd C:\chemin\vers\projet-paiement
+.\load-test.ps1
+```
+
+**Astuce :** Pour arrêter le script, appuyez sur **Ctrl + C**
+
+---
+
+### Option 2 : Script Batch (CMD)
+
+Créez un fichier `load-test.bat` à la racine du projet :
+
+```batch
+@echo off
+:loop
+curl -X POST http://localhost/api/orders ^
+  -H "Content-Type: application/json" ^
+  -d "{\"userId\": 1, \"productDescription\": \"Test\", \"quantity\": 5, \"totalPrice\": 100.00}"
+timeout /t 1 /nobreak
+goto loop
+```
+
+Puis, exécutez le fichier en double-cliquant ou via CMD :
+
+```cmd
+load-test.bat
+```
+
+> **Note :** `timeout /t 1` = attendre 1 seconde entre les requêtes. Ajustez le chiffre comme vous le souhaitez.
+
+---
+
+### Option 3 : Utiliser Apache Bench (AB)
+
+Si vous avez [Apache Bench](https://httpd.apache.org/docs/current/programs/ab.html) installé (ou via [Git Bash](https://git-scm.com/)) :
+
+```bash
+ab -n 100 -c 10 -p order.json http://localhost/api/orders
+```
+
+Créez d'abord un fichier `order.json` :
+
+```json
+{"userId": 1, "productDescription": "Test", "quantity": 5, "totalPrice": 100.00}
+```
+
+---
+
+### Option 4 : Utiliser Postman ou Insomnia
+
+Les outils visuels comme [Postman](https://www.postman.com/) ou [Insomnia](https://insomnia.rest/) ont des features de test de charge intégrées :
+
+1. Créez une requête POST vers `http://localhost/api/orders`
+2. Utilisez leur feature "Runner" ou "Load Testing" pour envoyer plusieurs requêtes
+3. Observez les résultats en temps réel
+
+---
+
+## 13. Troubleshooting
 
 ### Les services mettent longtemps à démarrer
 
