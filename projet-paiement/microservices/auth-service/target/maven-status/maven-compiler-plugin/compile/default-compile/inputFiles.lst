@@ -1,0 +1,8 @@
+/home/boywithuke/Project/rattrapage/kiady/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/AuthServiceApplication.java
+/home/boywithuke/Project/rattrapage/kiady/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/config/SecurityConfig.java
+/home/boywithuke/Project/rattrapage/kiady/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/controller/AuthController.java
+/home/boywithuke/Project/rattrapage/kiady/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/dto/LoginRequest.java
+/home/boywithuke/Project/rattrapage/kiady/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/dto/RegisterRequest.java
+/home/boywithuke/Project/rattrapage/kiady/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/model/User.java
+/home/boywithuke/Project/rattrapage/kiady/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/repository/UserRepository.java
+/home/boywithuke/Project/rattrapage/kiady/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/service/AuthService.java

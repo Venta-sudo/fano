@@ -1,7 +1,6 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  # --- Infrastructure Services ---
   postgres:
     image: postgres:13-alpine
     container_name: postgres_db
@@ -10,7 +9,7 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
     ports:
-      - "5433:5432" # HOST:CONTAINER -> Map port 5433 on your machine to port 5432 inside the container
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -25,7 +24,7 @@ services:
     hostname: zookeeper
     container_name: zookeeper
     ports:
-      - "2181:2181" # Expose Zookeeper client port to host
+      - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -38,8 +37,8 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"   # Map host port 9092 to container's PLAINTEXT_HOST listener (for local tools)
-      - "29092:29092" # Map internal port 29092 for inter-container communication (PLAINTEXT_INTERNAL)
+      - "9092:9092"
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -51,15 +50,13 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     restart: unless-stopped
 
-  # --- Microservices Spring Boot ---
-
   auth-service:
     build:
       context: ./microservices/auth-service
       dockerfile: Dockerfile
     container_name: auth_service
-    # Le port sera exposé par NGINX, mais garder pour le debugging direct si besoin
-    # - "8001:8001"
+    ports:
+      - "8001:8001"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/microservices_db
       SPRING_DATASOURCE_USERNAME: user
@@ -67,7 +64,10 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
       SPRING_DATASOURCE_SSLMODE: disable
+      SERVER_PORT: 8001
       MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info,prometheus
+    volumes:
+      - ~/.m2:/root/.m2
     depends_on:
       postgres:
         condition: service_healthy
@@ -78,8 +78,8 @@ services:
       context: ./microservices/order-service
       dockerfile: Dockerfile
     container_name: order_service
-    # Le port sera exposé par NGINX, mais garder pour le debugging direct si besoin
-    # - "8002:8002"
+    ports:
+      - "8002:8002"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/microservices_db
       SPRING_DATASOURCE_USERNAME: user
@@ -90,7 +90,10 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: org.apache.kafka.common.serialization.StringSerializer
       SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: org.springframework.kafka.support.serializer.JsonSerializer
+      SERVER_PORT: 8002
       MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info,prometheus
+    volumes:
+      - ~/.m2:/root/.m2
     depends_on:
       postgres:
         condition: service_healthy
@@ -103,6 +106,8 @@ services:
       context: ./microservices/invoice-service
       dockerfile: Dockerfile
     container_name: invoice_service
+    ports:
+      - "8003:8003"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/microservices_db
       SPRING_DATASOURCE_USERNAME: user
@@ -117,7 +122,10 @@ services:
       SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER: org.apache.kafka.common.serialization.StringDeserializer
       SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: org.apache.kafka.common.serialization.StringSerializer
       SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: org.springframework.kafka.support.serializer.JsonSerializer
+      SERVER_PORT: 8003
       MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info,prometheus
+    volumes:
+      - ~/.m2:/root/.m2
     depends_on:
       postgres:
         condition: service_healthy
@@ -130,43 +138,43 @@ services:
       context: ./microservices/notification-service
       dockerfile: Dockerfile
     container_name: notification_service
+    ports:
+      - "8004:8004"
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       SPRING_KAFKA_CONSUMER_GROUP_ID: notification-service-group-docker
       SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET: earliest
       SPRING_KAFKA_CONSUMER_KEY_DESERIALIZER: org.apache.kafka.common.serialization.StringDeserializer
       SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER: org.apache.kafka.common.serialization.StringDeserializer
+      SERVER_PORT: 8004
       MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info,prometheus
+    volumes:
+      - ~/.m2:/root/.m2
     depends_on:
       kafka:
         condition: service_started
     restart: on-failure
 
-  # --- Load Balancer & Monitoring ---
-
   nginx:
     image: nginx:alpine
     container_name: nginx_proxy
     ports:
-      - "80:80" # Expose NGINX sur le port 80 de l'hôte
+      - "80:80"
     volumes:
-      # Nous allons créer ce fichier nginx.conf à l'étape 2.3
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - auth-service
-      - order-service # NGINX doit attendre que les services Spring Boot soient démarrés
+      - order-service
     restart: on-failure
 
   prometheus:
-    image: prom/prometheus:v2.47.0 # Version stable de Prometheus
+    image: prom/prometheus:v2.47.0
     container_name: prometheus
     ports:
-      - "9090:9090" # Expose l'UI de Prometheus
+      - "9090:9090"
     volumes:
-      # Nous allons créer ce fichier prometheus.yml à la phase 3.1
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     command: --config.file=/etc/prometheus/prometheus.yml --web.enable-remote-write-receiver
-    # Prometheus doit attendre les services Spring Boot pour scraper leurs métriques
     depends_on:
       - auth-service
       - order-service
@@ -175,24 +183,20 @@ services:
     restart: on-failure
 
   grafana:
-    image: grafana/grafana:10.2.2 # Version stable de Grafana
+    image: grafana/grafana:10.2.2
     container_name: grafana
     ports:
-      - "3000:3000" # Expose l'UI de Grafana
+      - "3000:3000"
     volumes:
-      # Optionnel: pour persister les dashboards et config
       - grafana_data:/var/lib/grafana
     environment:
-      # Permet de se connecter sans login/password pour la démo, ou de set des creds par défaut
-      # GF_SECURITY_ADMIN_USER: admin
-      # GF_SECURITY_ADMIN_PASSWORD: password
-      GF_AUTH_ANONYMOUS_ENABLED: "true" # Accès anonyme pour la démo
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
       GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
-      GF_AUTH_DISABLE_LOGIN_FORM: "true" # Désactive le formulaire de login
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
     depends_on:
-      - prometheus # Grafana a besoin de Prometheus comme source de données
+      - prometheus
     restart: on-failure
 
 volumes:
   postgres_data:
-  grafana_data: # Nouveau volume pour Grafana
+  grafana_data:

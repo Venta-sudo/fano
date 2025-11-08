@@ -1,0 +1,10 @@
+target/
+.mvn/wrapper/maven-wrapper.jar
+*.log
+.git
+.gitignore
+.DS_Store
+node_modules/
+npm-debug.log
+.env
+.env.local
