@@ -30,37 +30,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "tooltip": false,
-              "viz": false,
-              "legend": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "mode": "thresholds"
           },
           "mappings": [],
           "thresholds": {
@@ -83,28 +53,32 @@
       },
       "id": 1,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "values": false,
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": ""
         },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
+        "text": {},
+        "textMode": "auto"
       },
+      "pluginVersion": "10.2.2",
       "targets": [
         {
-          "expr": "rate(http_requests_total[1m])",
+          "expr": "orders_total",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{job}}",
           "refId": "A"
         }
       ],
-      "title": "HTTP Requests/sec",
-      "type": "timeseries"
+      "title": "Total Orders Created",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -125,8 +99,7 @@
                 "value": null
               }
             ]
-          },
-          "unit": "s"
+          }
         },
         "overrides": []
       },
@@ -237,14 +210,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "hideFrom": {
-              "tooltip": false,
-              "viz": false,
-              "legend": false
-            }
+            "mode": "thresholds"
           },
           "mappings": [],
           "thresholds": {
@@ -267,29 +233,32 @@
       },
       "id": 4,
       "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "values": []
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "values": false,
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": ""
         },
-        "pieType": "pie",
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        },
-        "displayLabels": []
+        "text": {},
+        "textMode": "auto"
       },
+      "pluginVersion": "10.2.2",
       "targets": [
         {
-          "expr": "sum by (job) (rate(http_requests_total[5m]))",
+          "expr": "rate(orders_total[1m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{job}}",
           "refId": "A"
         }
       ],
-      "title": "Traffic Distribution by Service",
-      "type": "piechart"
+      "title": "Orders/sec",
+      "type": "stat"
     }
   ],
   "refresh": "10s",
