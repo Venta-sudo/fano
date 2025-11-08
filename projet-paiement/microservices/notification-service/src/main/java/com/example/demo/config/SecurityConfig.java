@@ -15,11 +15,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .securityMatchers(matchers -> matchers.requestMatchers("/**"))
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
+                // Actuator DOIT être avant les autres matchers
                 .requestMatchers("/actuator/**").permitAll()
-                .anyRequest().authenticated() 
+                .requestMatchers("/actuator/prometheus").permitAll()
+                .requestMatchers("/health").permitAll()
+                // API publics
+                .anyRequest().permitAll() 
             );
+        
         return http.build();
     }
 }
