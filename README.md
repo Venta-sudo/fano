@@ -18,12 +18,13 @@ si ça ne marche pas avec ./mvnw, utilisez mvn seulement ex. : mvn clean package
 à l'emplacement où se trouve `docker-compose.yaml`, veuillez exécuter cette commande :
 docker-compose up --build
 en cas d'erreur, veuillez suivre les commandes suivantes :
-- Arrêter tous les services
+- Arrêter tous les services :
 sudo docker-compose down
-- Supprimer les images problématiques
-sudo docker rmi projet-paiement_order-service
+- Supprimer les images problématiques :
+sudo docker rmi projet-paiement_order-service :
 - Reconstruire et relancer
 sudo docker-compose up -d --build
+
 http://prometheus:9090
 
 5. Vérification : Vérififiez que tout fonctionne bien
