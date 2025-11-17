@@ -1,0 +1,8 @@
+/home/fano/Bureau/prog/fano/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/AuthServiceApplication.java
+/home/fano/Bureau/prog/fano/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/config/SecurityConfig.java
+/home/fano/Bureau/prog/fano/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/controller/AuthController.java
+/home/fano/Bureau/prog/fano/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/dto/LoginRequest.java
+/home/fano/Bureau/prog/fano/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/dto/RegisterRequest.java
+/home/fano/Bureau/prog/fano/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/model/User.java
+/home/fano/Bureau/prog/fano/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/repository/UserRepository.java
+/home/fano/Bureau/prog/fano/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/service/AuthService.java

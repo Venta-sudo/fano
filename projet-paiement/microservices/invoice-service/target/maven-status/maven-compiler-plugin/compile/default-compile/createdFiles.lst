@@ -1,0 +1,8 @@
+com/example/demo/dto/event/OrderCreatedEvent.class
+com/example/demo/repository/InvoiceRepository.class
+com/example/demo/config/SecurityConfig.class
+com/example/demo/model/Invoice$InvoiceStatus.class
+com/example/demo/service/InvoiceService.class
+com/example/demo/dto/event/InvoiceGeneratedEvent.class
+com/example/demo/model/Invoice.class
+com/example/demo/InvoiceServiceApplication.class
