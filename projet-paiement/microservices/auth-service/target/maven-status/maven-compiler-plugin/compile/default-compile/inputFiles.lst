@@ -1,8 +1,0 @@
-/media/fano/EFI1/ESM/Rattrapage/TechWeb/techweb/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/AuthServiceApplication.java
-/media/fano/EFI1/ESM/Rattrapage/TechWeb/techweb/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/config/SecurityConfig.java
-/media/fano/EFI1/ESM/Rattrapage/TechWeb/techweb/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/controller/AuthController.java
-/media/fano/EFI1/ESM/Rattrapage/TechWeb/techweb/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/dto/LoginRequest.java
-/media/fano/EFI1/ESM/Rattrapage/TechWeb/techweb/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/dto/RegisterRequest.java
-/media/fano/EFI1/ESM/Rattrapage/TechWeb/techweb/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/model/User.java
-/media/fano/EFI1/ESM/Rattrapage/TechWeb/techweb/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/repository/UserRepository.java
-/media/fano/EFI1/ESM/Rattrapage/TechWeb/techweb/projet-paiement/microservices/auth-service/src/main/java/com/example/demo/service/AuthService.java
