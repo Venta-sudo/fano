@@ -36,10 +36,8 @@ sudo docker rmi projet-paiement_order-service :
 - Reconstruire et relancer
 sudo docker-compose up -d --build
 
-http://prometheus:9090
-
 5. Vérification : Vérififiez que tout fonctionne bien
-- Prometheus : http://localhost:9090/
+- Prometheus : http://prometheus:9090
 - Graphana : http://localhost:3000/
 ajoutez Prometheus comme source de données
 http://prometheus:9090
