@@ -1,4 +1,4 @@
-# fano
+# Informations
 Les étapes à faire :
 1. git clone <url-projet>
 2. Ensuite utilisez ces commandes :
