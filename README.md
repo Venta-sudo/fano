@@ -45,8 +45,8 @@ http://prometheus:9090
 curl -X POST http://localhost/api/orders \
 -H "Content-Type: application/json" \
 -d '{
-    "userId": User1,
-    "productDescription": "Produit de qualité",
+    "userId": "1",
+    "productDescription": "Test simple",
     "quantity": 1,
-    "totalPrice": 135,99
+    "totalPrice": 100.0
 }'
